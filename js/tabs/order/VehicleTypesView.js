@@ -23,6 +23,7 @@ class VehicleTypesView extends React.Component {
 
   constructor(props) {
     super(props);
+
     (this: any).handleShowMenu = this.handleShowMenu.bind(this);
   }
 
@@ -36,13 +37,15 @@ class VehicleTypesView extends React.Component {
       icon: require('../../../images/icon_menu.png'),
       onPress: this.handleShowMenu
     };
+
+    const title = "Спецтехника";
     return (
       <View style={styles.container}>
         <GruberHeader
-          title="Спецтехника"
+          title={title}
           leftItem={leftItem}>
             <Text style={styles.headerTitle}>
-              Спецтехника
+              {title}
             </Text>
         </GruberHeader>
         <Text style={styles.text}>
