@@ -11,3 +11,12 @@ export function resetErrors() {
     type: 'RESET_ERRORS'
   };
 }
+
+
+export function handleError(e) {
+  console.log('ERROR');
+  console.log(e);
+  return {
+    type: "HANDLE_ERROR"
+  }
+}

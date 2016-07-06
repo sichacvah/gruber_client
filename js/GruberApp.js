@@ -9,17 +9,19 @@ import {
   StyleSheet,
   StatusBar,
   AppState,
-  Alert
+  Alert,
+  InteractionManager,
+  ActivityIndicator
 } from 'react-native';
-
 import {Text} from './common/GruberText';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {setEndpointPath, setEndpointHost, readEndpoint} from 'redux-json-api';
-import {resetErrors, getStatus} from './actions';
+import {resetErrors, getStatus, handleError} from './actions';
 import GruberColors from './common/GruberColors';
 import FirstLoadingScreen from './firstScreen/FirstLoadingScreen';
 import env from './env';
+import GruberNavigator from './GruberNavigator';
 
 const stateToProps = (state) => {
   return {
@@ -36,13 +38,19 @@ const dispatchToProps = (dispatch) => {
     setEndpointHost,
     resetErrors,
     getStatus,
-    readEndpoint
+    readEndpoint,
+    handleError
   }, dispatch);
 }
 
 class GruberApp extends React.Component {
   constructor(props, context) {
     super(props, context);
+    (this: any).shouldRenderPlaceholderView = this.shouldRenderPlaceholderView.bind(this);
+  }
+
+  shouldRenderPlaceholderView() {
+    return this.props.api.isReading > 0;
   }
 
   componentDidMount() {
@@ -52,24 +60,48 @@ class GruberApp extends React.Component {
     this.props.getStatus();
     this.props.setEndpointHost(env.jsonApiHost);
     this.props.setEndpointPath(endpoint);
+    this.props.readEndpoint('vehicle_type').catch(this.props.handleError);
+    this.props.readEndpoint('job_types').catch(this.props.handleError);
+  }
+
+  reloadData() {
+    this.props.resetErrors();
     this.props.readEndpoint('vehicle_types');
     this.props.readEndpoint('job_types');
+  }
+
+  renderPlaceholderView() {
+    return (
+      <View style={[styles.container, {justifyContent: 'center', alignItems: "center"}]}>
+        <ActivityIndicator size="large" animating={true} color={GruberColors.appColor} />
+      </View>
+    )
   }
 
   render() {
     if (this.props.firstLoading) {
       return (<FirstLoadingScreen />);
     }
+
+    if (this.props.error) {
+      Alert.alert(
+        'Ошибка!',
+        this.props.error.title,
+        [
+          {text: 'Ok', onPress: this.reloadData.bind(this)},
+        ]
+      );
+    }
     return (
       <View style={styles.container}>
         <StatusBar
-          translucent={true}
-          backgroundColor="rgba(237, 196, 18, 0.95)"
+          translucent={false}
+          backgroundColor="rgba(0,0,0, 0.9)"
           color="black"
           barStyle="light-content" />
-
-        <GruberNavigation />
-        
+        {this.shouldRenderPlaceholderView() ?
+          this.renderPlaceholderView() :
+          <GruberNavigator />}
       </View>
     );
   }
@@ -79,9 +111,6 @@ class GruberApp extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   welcome: {
     fontSize: 20,

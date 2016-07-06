@@ -5,11 +5,10 @@
 
 import GruberColors from './GruberColors';
 import GruberTouchable from './GruberTouchable';
-import GruberProgressBar from './GruberProgressBar';
 import {Text} from './GruberText';
 
 import React from 'react';
-import {View,StyleSheet,Image} from 'react-native';
+import {View,StyleSheet,Image, ActivityIndicator} from 'react-native';
 
 
 
@@ -51,7 +50,7 @@ class GruberButton extends React.Component {
         <View style={[styles.button,
                 (this.props.enabled ? styles.enabled : styles.disabled), 
         ]}>
-          <GruberProgressBar color={GruberColors.darkAppColor} size="small" />
+          <ActivityIndicator animating={true} />
         </View>
       );
     }

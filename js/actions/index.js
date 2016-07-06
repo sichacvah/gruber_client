@@ -9,4 +9,5 @@ import * as configActions from './configActions';
 module.exports = {
   ...require('./configActions'),
   ...require('./errorsActions'),
+  ...require('./navigationActions')
 };

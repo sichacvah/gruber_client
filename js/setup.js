@@ -5,8 +5,14 @@
 import 'react-native-browser-polyfill';
 import GruberApp from './GruberApp';
 import { Provider } from 'react-redux';
+import GruberColors from './common/GruberColors';
 import React from 'react';
 import configureStore from './store/configureStore';
+import {
+  View,
+  ActivityIndicator,
+  StatusBar
+} from 'react-native';
 
 function setup(): ReactClass<{}> {
   class Root extends React.Component {
@@ -25,7 +31,16 @@ function setup(): ReactClass<{}> {
 
     render() {
       if (this.state.isLoading) {
-        return null;
+       return (
+          <View style={{flex: 1, justifyContent: 'center', alignItems: "center"}}>
+            <StatusBar
+              translucent={false}
+              backgroundColor="rgba(0,0,0, 0.9)"
+              color="black"
+              barStyle="light-content" />
+            <ActivityIndicator size="large" animating={true} color={GruberColors.appColor} />
+          </View>
+        );
       }
 
       return (
