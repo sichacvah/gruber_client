@@ -12,11 +12,3 @@ export function resetErrors() {
   };
 }
 
-
-export function handleError(e) {
-  console.log('ERROR');
-  console.log(e);
-  return {
-    type: "HANDLE_ERROR"
-  }
-}

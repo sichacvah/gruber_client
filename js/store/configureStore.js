@@ -19,26 +19,32 @@ var logger = createLogger({
 
 
 var dropApiLoadingStatuses = createTransform(
-  (api) => {
+  (state, key) => {
+    if (key !== 'api') {
+      return state;
+    }
+    
     return {
-      ...api,
+      ...state,
       isCreating: 0,
       isDeleting: 0,
       isReading: 0,
       isUpdating: 0,
     };
   },
-  (api) => {
+  (state, key) => {
+    if (key !== 'api') {
+      return state;
+    }
+    
     return {
-      ...api,
+      ...state,
       isCreating: 0,
       isDeleting: 0,
       isReading: 0,
       isUpdating: 0,
-    }
-  },
-
-
+    };
+  }
 );
 var createGruberStore = applyMiddleware(thunk, logger)(createStore);
 

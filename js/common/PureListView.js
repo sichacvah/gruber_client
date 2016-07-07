@@ -42,11 +42,12 @@ class PureListView extends React.Component {
   static defaultProps = {
     data: [],
     contentInset: { top: 0, bottom: 0 },
-    minContentHeight: Dimensions.get('window').height + 20
+    minContentHeight: Dimensions.get('window').height
   };
 
   constructor(props: Props) {
     super(props);
+    console.log(props);
     let dataSource = new ListView.DataSource({
       getRowData: (dataBlob, sid, rid) => dataBlob[sid][rid],
       getSectionHeaderData: (dataBlob, sid) => dataBlob[sid],
@@ -64,9 +65,9 @@ class PureListView extends React.Component {
   }
 
   componentWillReceiveProps(nextPros: Props) {
-    if (this && this.props.data !== nextProps.data) {
+    if (this.props.data !== nextProps.data) {
       this.setState({
-        dataSoure: cloneWithData(this.state.dataSource, nextProps.data)
+        dataSource: cloneWithData(this.state.dataSource, nextProps.data)
       });
     }
   }
@@ -78,7 +79,6 @@ class PureListView extends React.Component {
     return (
       <ListView
         initialListSize={10}
-        pageSize={1}
         {...this.props}
         ref="listview"
         dataSource={this.state.dataSource}
@@ -113,7 +113,7 @@ class PureListView extends React.Component {
 
 
 
-function clineWidthData(dataSource: ListView.DataSourcer, data: ?Data) {
+function cloneWithData(dataSource: ListView.DataSource, data: ?Data) {
   if (!data) {
     return dataSource.cloneWithRows([]);
   }

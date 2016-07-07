@@ -1,6 +1,7 @@
 package com.gruber_client;
 
 import com.facebook.react.ReactActivity;
+import com.airbnb.android.react.maps.MapsPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactPackage;
@@ -42,6 +43,7 @@ public class MainActivity extends ReactActivity {
         this.setTaskDescription(taskDesc);
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new MapsPackage(this),
             new FIRMessagingPackage(),
             new VectorIconsPackage(),
             new ComponentsPackage()

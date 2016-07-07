@@ -13,7 +13,8 @@ const COLORS = {
   appColor: '#F7CE1C',
   darkAppColor: '#E6BD0C',
   lightAppColor: '#F9DF2D',
-  backgroundColor: '#EEEEEE'
+  backgroundColor: '#EEEEEE',
+  blueColor:'#007AFF' 
 };
 
 

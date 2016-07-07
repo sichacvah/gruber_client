@@ -17,7 +17,7 @@ import {Text} from './common/GruberText';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {setEndpointPath, setEndpointHost, readEndpoint} from 'redux-json-api';
-import {resetErrors, getStatus, handleError} from './actions';
+import {resetErrors, getStatus} from './actions';
 import GruberColors from './common/GruberColors';
 import FirstLoadingScreen from './firstScreen/FirstLoadingScreen';
 import env from './env';
@@ -38,8 +38,7 @@ const dispatchToProps = (dispatch) => {
     setEndpointHost,
     resetErrors,
     getStatus,
-    readEndpoint,
-    handleError
+    readEndpoint
   }, dispatch);
 }
 
@@ -60,8 +59,8 @@ class GruberApp extends React.Component {
     this.props.getStatus();
     this.props.setEndpointHost(env.jsonApiHost);
     this.props.setEndpointPath(endpoint);
-    this.props.readEndpoint('vehicle_type').catch(this.props.handleError);
-    this.props.readEndpoint('job_types').catch(this.props.handleError);
+    this.props.readEndpoint('vehicle_types');
+    this.props.readEndpoint('job_types');
   }
 
   reloadData() {
