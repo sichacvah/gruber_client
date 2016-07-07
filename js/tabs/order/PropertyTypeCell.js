@@ -10,50 +10,27 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {
   View,
   StyleSheet,
-  Image
+  Image,
+  Slider
 } from 'react-native';
 
-type VehicleType = {
-  attributes: Object;
-  relationships: Object;
-};
-
-
-export default class VehicleTypeCell extends React.Component {
-  props: {
-    vehicleType: VehicleType;
-    lastId: string;
-    firstId: string;
-    onPress: ?() => void;
-    style: any;
-  };
-  
+// TODO: add flow 
+export default class PropertyTypeCell extends React.Component { 
   render() {
-    const defaultIcon = require("../../../images/defaultVehicleTypeImg.png");
-    const vehicleType = this.props.vehicleType;
-    let boundaryStyle;
-    if (this.props.firstId === vehicleType.id) {
-      boundaryStyle = { borderTopLeftRadius: 2, borderTopRightRadius: 2,  borderWidth: 0.4 };
-    }
-    if (this.props.lastId === vehicleType.id) {
-      boundaryStyle = { borderBottomLeftRadius: 2, borderBottomRightRadius: 2, borderWidth: 0.4 };
-    }
-
-
+    const propertyType = this.props.propertyType;
     var cell = (
-      <View style={[styles.cell, boundaryStyle]}>
-
+      <View style={styles.cell}>
         <View style={styles.titleSection}>
-          <View>
-            <Image source={defaultIcon} style={styles.icon} resizeMode="contain"/>
-          </View>
           <Text style={styles.title}>
             {vehicleType.attributes.name}
           </Text>
         </View>
-        <View style={styles.forwardSection}>
-          <Icon name="ios-arrow-forward-outline" size={24} color={GruberColors.lightText}/>
-        </View>
+        {!this.props.onPress && 
+        <View>
+          <Slider 
+            minimumValue={parseFloat(propertyType.attributes.min)}
+            maximumValue={parseFloat(propertyType.attributes.max)}
+        </View>}
       </View>
     );
 

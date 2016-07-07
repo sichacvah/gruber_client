@@ -11,8 +11,9 @@ import {
   Text
 } from 'react-native';
 
-
+import VehiclePropertiesView from './tabs/order/VehiclePropertiesView';
 import GruberTabsView from './tabs/GruberTabsView';
+import JobTypesFilter from './tabs/jobTypes/Filter';
 // import GruberHistoryView from './history/GruberHistoryView';
 
 
@@ -96,6 +97,11 @@ class GruberNavigator extends React.Component {
   }
 
   renderScene(route, navigator) {
+    if (route.jobTypesFilter) {
+      return (<JobTypesFilter navigator={navigator} />);
+    } else if (route.vehicleType) {
+      return (<VehiclePropertiesView navigator={navigator} vehicleType={route.vehicleType} />)
+    }
     return (<GruberTabsView navigator={navigator} />);
   }
 }

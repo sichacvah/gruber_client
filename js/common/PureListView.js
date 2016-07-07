@@ -64,7 +64,7 @@ class PureListView extends React.Component {
     (this: any).onContentSizeChange = this.onContentSizeChange.bind(this);
   }
 
-  componentWillReceiveProps(nextPros: Props) {
+  componentWillReceiveProps(nextProps: Props) {
     if (this.props.data !== nextProps.data) {
       this.setState({
         dataSource: cloneWithData(this.state.dataSource, nextProps.data)
@@ -79,6 +79,7 @@ class PureListView extends React.Component {
     return (
       <ListView
         initialListSize={10}
+        enableEmptySections={true}
         {...this.props}
         ref="listview"
         dataSource={this.state.dataSource}

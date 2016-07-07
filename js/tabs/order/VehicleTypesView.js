@@ -11,7 +11,8 @@ import {
   StyleSheet,
   Platform,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import PureListView from '../../common/PureListView';
 import GruberHeader from '../../common/GruberHeader';
@@ -20,10 +21,35 @@ import VehicleTypeCell  from './VehicleTypeCell';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {readEndpoint} from 'redux-json-api';
+import JobTypeFiltersLink from './JobTypeFiltersLink';
+import GruberEmptyListView from '../../common/GruberEmptyListView';
+
+function vehicleTypes(types: ?Array<Object>, selectedJobType: ?string) {
+  if (!types) {
+    return [];
+  };
+  if (!selectedJobType) {
+    return types.data;
+  }
+  
+  return types.data.filter((type) => {
+    return !!type.relationships['job-types'].data.find((jobType) => jobType.id === selectedJobType);
+  });
+}
 
 function select(store) {
+  const selected = store.jobTypesFilter.selectedJobType;
+  let selectedJobType;
+  if (store.api["job-types"]) {
+    selectedJobType = store.api['job-types'].data.find((i) => {
+      return i.id === selected;
+    });
+  }
+  selectedJobType = (selectedJobType ? selectedJobType.attributes.name : null);
   return {
-    vehicleTypes: (store.api["vehicle-types"] ? store.api["vehicle-types"].data : [])
+    vehicleTypes: vehicleTypes(store.api["vehicle-types"], selected),
+    isLoading: store.api.isReading > 0,
+    selectedJobType: selectedJobType,
   };
 }
 
@@ -45,6 +71,7 @@ class VehicleTypesView extends React.Component {
     (this: any).handleShowMenu = this.handleShowMenu.bind(this);
     (this: any).renderEmptyList = this.renderEmptyList.bind(this);
     (this: any).renderRow = this.renderRow.bind(this);
+    (this: any).renderListView = this.renderListView.bind(this);
   }
 
   handleShowMenu() {
@@ -54,26 +81,40 @@ class VehicleTypesView extends React.Component {
   renderRow(vehicleType) {
     return (
       <VehicleTypeCell
+        onPress={() => this.props.navigator.push({vehicleType})}
         key={vehicleType.id}
         lastId={this.props.vehicleTypes[this.props.vehicleTypes.length - 1].id}
+        firstId={this.props.vehicleTypes[0].id}
         vehicleType={vehicleType}  />
     );
   }
 
+  renderListView() {
+    const listView = (
+      <PureListView
+        data={this.props.vehicleTypes}
+        renderEmptyList={this.renderEmptyList}
+        renderRow={this.renderRow} />
+    );
+    return listView;
+  }
+
   renderEmptyList() {
     return (
-      <View style={styles.emptyList}>
-        <Text style={styles.emptyListText}>
-          Возникли проблемы с соединением
-          проверьте подключение и
-        </Text>
-        <TouchableOpacity onPress={() => this.props.readEndpoint('vehicle_types')}>
-          <Text style={styles.emptyListLink}>
-            попробуйте ещё раз
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <GruberEmptyListView onPress={() => this.props.readEndpoint('vehicle_types')} />
     );
+  }
+
+  renderPlaceholderView() {
+    return (
+      <View style={[styles.container, {justifyContent: 'center', alignItems: "center"}]}>
+        <ActivityIndicator size="large" animating={true} color={GruberColors.appColor} />
+      </View>
+    )
+  }
+
+  openFilters() {
+    this.props.navigator.push({jobTypesFilter: true});
   }
 
   render() {
@@ -95,65 +136,21 @@ class VehicleTypesView extends React.Component {
         </GruberHeader>
 
         <View style={styles.content}>
-          <View style={styles.linkToJobTypes}>
-            <View style={styles.linkToJobTypesText}>
-              <View style={{justifyContent: 'center'}}>
-                <Text style={styles.jobTypes}>Вид работы</Text>
-                <Text style={styles.selectedJobType}>Обустройство...</Text>
-              </View>
-            </View>
-            <View>
-              <Icon name="ios-arrow-forward-outline" size={24} color={GruberColors.lightText} />
-            </View>
-          </View>
-          <View style={styles.list}>
-            <PureListView
-              data={this.props.vehicleTypes}
-              renderEmptyList={this.renderEmptyList}
-              renderRow={this.renderRow} />
-           </View>
+          <JobTypeFiltersLink selectedJobType={this.props.selectedJobType} onPress={this.openFilters.bind(this)} />
+          {this.props.isLoading ?  this.renderPlaceholderView() : this.renderListView()}
         </View>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  list: {
-    borderWidth: 1,
-    borderColor: '#bbb',
-    borderRadius: 2,
-    flex: 1,
-    marginBottom: 10
-  },
-  linkToJobTypes: {
-    height: 60,
-    borderWidth: 1,
-    borderColor: '#CCC',
-    borderRadius: 2,
-    backgroundColor: 'white',
-    marginBottom: 10,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    paddingHorizontal: 17
-  },
-  jobTypes: {
-    color: GruberColors.darkText,
-    fontSize: 14,
-    
-  },
-  selectedJobType: {
-    color: GruberColors.lightText,
-    fontSize: 12,
-  },
+const styles = StyleSheet.create({   
   text: {
     color: GruberColors.darkText,
     fontSize: 14
   },
   content: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    padding: 10,
     flex: 1
   },
   container:{
@@ -163,17 +160,8 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 20,
     fontWeight: 'normal'
-  },
-  emptyList: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyListText: {
-    color: GruberColors.darkText,
-  },
-  emptyListLink: {
-    color: GruberColors.blueColor
   }
+  
 
 
 

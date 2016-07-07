@@ -5,6 +5,7 @@
       <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
       <item name="android:timePickerDialogTheme">@style/MyTimePickerDialogTheme</item>
       <item name="colorControlActivated">#F7CE1C</item>
+      <item name="colorControlNormal">#032250</item>
     </style>
 
     <style name="MyTimePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">

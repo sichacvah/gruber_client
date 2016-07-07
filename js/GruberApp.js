@@ -45,11 +45,6 @@ const dispatchToProps = (dispatch) => {
 class GruberApp extends React.Component {
   constructor(props, context) {
     super(props, context);
-    (this: any).shouldRenderPlaceholderView = this.shouldRenderPlaceholderView.bind(this);
-  }
-
-  shouldRenderPlaceholderView() {
-    return this.props.api.isReading > 0;
   }
 
   componentDidMount() {
@@ -67,14 +62,6 @@ class GruberApp extends React.Component {
     this.props.resetErrors();
     this.props.readEndpoint('vehicle_types');
     this.props.readEndpoint('job_types');
-  }
-
-  renderPlaceholderView() {
-    return (
-      <View style={[styles.container, {justifyContent: 'center', alignItems: "center"}]}>
-        <ActivityIndicator size="large" animating={true} color={GruberColors.appColor} />
-      </View>
-    )
   }
 
   render() {
@@ -98,9 +85,7 @@ class GruberApp extends React.Component {
           backgroundColor="rgba(0,0,0, 0.9)"
           color="black"
           barStyle="light-content" />
-        {this.shouldRenderPlaceholderView() ?
-          this.renderPlaceholderView() :
-          <GruberNavigator />}
+          <GruberNavigator />
       </View>
     );
   }
