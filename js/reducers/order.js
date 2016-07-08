@@ -4,17 +4,10 @@
 
 import type { Action } from '../actions/types';
 
+// TODO: Refactor types
 type Attribute = {
   name: string;
 };
-
-
-// TODO: Refactor type
-export type VehicleType = {
-  id: string;
-  type: string;
-};
-
 
 export type State = {
   attributes: {
@@ -22,10 +15,12 @@ export type State = {
     address: string;
     lat: string;
     lng: string;
+    date?: Date;
+    duration: number;
   };
   relationships: {
-    data: {
-      "vehicle-type": ?VehicleType;
+    "vehicle-type": {
+      data: ?VehicleType;
     };
   };
   type: string;
@@ -37,27 +32,15 @@ const initialState = {
     address: "",
     lat: "",
     lng: "",
+    duration: 1,
+    date: new Date(Date.now()),
   },
   relationships: {
-    data: {
-      "vehicle-type": null
+    "vehicle-type": {
+      data: null,
     },
   }
 };
-
-function setDefaultValue(property: Object): Object {
-  return {
-    ...property,
-    value: "0",
-  };
-}
-
-function setRelations(vehicleType: Object): Object {
-  return {
-    id: vehicleType.id,
-    type: vehicleType.type
-  };
-}
 
 function property(state: Object = {}, action: Action) {
   if (action.type === 'CHANGE_PROPERTY_VALUE') {
@@ -70,7 +53,26 @@ function property(state: Object = {}, action: Action) {
     return state;
   }
   return state;
+}
 
+function vehicleProperties(state: {}, action: Action) {
+  if (action.type === 'SELECT_VEHICLE_TYPE') {
+    return {
+      ...state.attributes,
+      id: state.id,
+      type: state.type,
+      value: (state.attributes["value-type"] === 'boolean' ? null : "0")
+    };
+  } else if (action.type === 'CHANGE_PROPERTY_VALUE') {
+    if (action.id !== state.id) {
+      return state;
+    }
+    return {
+      ...state,
+      value: action.value,
+    };
+  }
+  return state;
 }
 
 
@@ -80,20 +82,42 @@ function order(state: State = initialState, action: Action) {
     return {
       ...state,
       relationships: {
-        data: {
-          "vehicle-type": setRelations(action.vehicleType),
+        "vehicle-type": {
+          data: {
+            id: action.vehicleType.id,
+            type: action.vehicleType.type
+          },
         },
       },
       attributes: {      
         ...state.attributes,
-        "vehicle-properties": action.included.filter((p) => availableProperties.includes(p.id)).map((p) => ({...p, value: "0"})),
+        "vehicle-properties": action.included.filter((p) => availableProperties.includes(p.id)).map((p) => vehicleProperties(p, action)),
       }
     };
   } else if (action.type === 'CHANGE_PROPERTY_VALUE') {
     return {
       ...state,
-      "vehicle-properties": setVehicleProperties,
+      attributes: {
+        ...state.attributes,
+        "vehicle-properties": state.attributes["vehicle-properties"].map((p) => vehicleProperties(p, action)),
+      }
     };
+  } else if (action.type === 'SET_DATE') {
+    return {
+      ...state,
+      attributes: {
+        ...state.attributes,
+        date: action.date
+      },
+    };
+  } else if (action.type === 'SET_DURATION') {
+    return {
+      ...state,
+      attributes: {
+        ...state.attributes,
+        duration: action.duration,
+      }
+    }
   }
   return state;
 }

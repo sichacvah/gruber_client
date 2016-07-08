@@ -22,7 +22,20 @@ export function changePropertyValue(id: string, value: string): Action {
   return {
     type: "CHANGE_PROPERTY_VALUE",
     id,
-    value,
+    value
   };
 }
 
+export function setDate(date: Date) {
+  return {
+    type: 'SET_DATE',
+    date
+  };
+}
+
+export function setDuration(duration: number) {
+  return {
+    type: 'SET_DURATION',
+    duration
+  } 
+}

@@ -22,8 +22,7 @@ var dropApiLoadingStatuses = createTransform(
   (state, key) => {
     if (key !== 'api') {
       return state;
-    }
-    
+    }    
     return {
       ...state,
       isCreating: 0,
@@ -33,6 +32,16 @@ var dropApiLoadingStatuses = createTransform(
     };
   },
   (state, key) => {
+    if (key === 'order') {
+      return {
+        ...state,
+        attributes: {
+          ...state.attributes,
+          date: new Date(state.attributes.date),
+        },
+      }
+      
+    }
     if (key !== 'api') {
       return state;
     }

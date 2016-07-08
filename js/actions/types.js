@@ -10,6 +10,8 @@ export type Action =
   | { type: "ERASE_FILTERS" }
   | { type: 'CHANGE_PROPERTY_VALUE', id: string, value: string }
   | { type: 'SELECT_VEHICLE_TYPE', vehicleType: Object, included: Array<Object> }
+  | { type: 'SET_DATE', date: Date }
+  | { type: 'SET_DURATION', duration: number }
 
 
 export type Dispatch = (action: Action | ThunkAction) => any;

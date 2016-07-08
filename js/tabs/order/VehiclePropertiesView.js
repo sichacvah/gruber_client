@@ -16,17 +16,19 @@ import {Text} from '../../common/GruberText';
 import GruberEmptyListView from '../../common/GruberEmptyListView';
 import GruberHeader from '../../common/GruberHeader';
 import GruberRadioButton from '../../common/GruberRadioButton';
+import GruberButton from '../../common/GruberButton';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {readEndpoint} from 'redux-json-api';
 import {selectVehicle, changePropertyValue} from '../../actions';
+import PropertyTypeCell from './PropertyTypeCell';
+
 
 
 function select(store) {
   return {
-    selectedVehicleType: store.order.relationships.data["vehicle-type"],
-
-    propertyTypes: store.api["vehicle-property-types"].data,
+    selectedVehicleType: store.order.relationships["vehicle-type"].data,
+    propertyTypes: store.order.attributes["vehicle-properties"],
     isLoading: store.api.isLoading > 0
   };
 }
@@ -65,32 +67,40 @@ class VehiclePropertiesView extends React.Component {
 
   handlePropertyTypeChange(id, value) {
     this.props.changePropertyValue(id, value);
-
   }
 
   renderRow(propertyType) {
+    let onPress = null;
+    if (propertyType["value-type"] === 'boolean') {
+      onPress = () => this.props.navigator.push({propertyType, onChange: (value) => this.handlePropertyTypeChange(propertyType.id, value)})
+    }
     return (
       <PropertyTypeCell
         key={propertyType.id}
         propertyType={propertyType}
         onChange={(value) => this.handlePropertyTypeChange(propertyType.id, value)}
+        onPress={onPress}
         />
-      <View>
-        <Text>{propertyType.attributes.name}</Text>
-      </View>
     );
   }
 
   renderListView() {
     const { vehicleType } = this.props;
-    const availableProperties = vehicleType.relationships["vehicle-property-types"].data.map(i => i.id);
-    const propertyTypes = this.props.propertyTypes.filter((i) => (availableProperties.includes(i.id)));
     return (
-      <PureListView
-        data={propertyTypes}
-        renderRow={this.renderRow}
-        renderEmptyList={this.renderEmptyList}
-      />
+      <View style={{flex: 1}}>
+        <PureListView
+          data={this.props.propertyTypes}
+          renderRow={this.renderRow}
+          renderEmptyList={this.renderEmptyList}
+        />
+          
+        <View style={styles.buttonWrapper}>
+          <GruberButton 
+            style={styles.button} 
+            caption="Продолжить" 
+            onPress={() => this.props.navigator.push({orderDetails: true})} />
+        </View>
+      </View>
     );
   }
 
@@ -111,8 +121,12 @@ class VehiclePropertiesView extends React.Component {
             <Text style={styles.headerTitle}>
               {title}
             </Text>
-        </GruberHeader>
-        {!this.props.selectedVehicleType || this.props.isLoading ? this.renderPlaceholderView() : this.renderListView()}
+          </GruberHeader>
+          <View style={styles.content}>
+            {!this.props.selectedVehicleType || this.props.isLoading ? this.renderPlaceholderView() : this.renderListView()}
+
+          
+          </View>
       </View>
     );
   }
@@ -120,6 +134,10 @@ class VehiclePropertiesView extends React.Component {
 
 
 const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+    padding: 10
+  },
   container: {
     flex: 1
   },
@@ -128,6 +146,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'normal'
   },
+  buttonWrapper: {
+    height: 50,
+    marginBottom: 10
+  }
 });
 
 
