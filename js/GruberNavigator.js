@@ -16,6 +16,10 @@ import GruberTabsView from './tabs/GruberTabsView';
 import JobTypesFilter from './tabs/jobTypes/Filter';
 import PropertiesSelect from './tabs/order/PropertiesSelect';
 import OrderDetails from './tabs/order/OrderDetails';
+import OrderAddress from './tabs/order/OrderAddress';
+import OrderMapView from './tabs/order/OrderMapView';
+import RegistrationView from './user/RegistrationView';
+import VehicleSearchView from './tabs/order/VehicleSearchView';
 // import GruberHistoryView from './history/GruberHistoryView';
 
 
@@ -107,6 +111,14 @@ class GruberNavigator extends React.Component {
       return (<PropertiesSelect navigator={navigator} propertyType={route.propertyType} onChange={route.onChange} />)
     } else if (route.orderDetails) {
       return (<OrderDetails navigator={navigator} />);
+    } else if (route.orderAddress) {
+      return (<OrderAddress navigator={navigator} />);
+    } else if (route.mapView) {
+      return (<OrderMapView navigator={navigator} />);
+    } else if (route.registraion) {
+      return (<RegistrationView navigator={navigator} />);
+    } else if (route.findVehicle) {
+      return (<VehicleSearchView navigator={navigator} />);
     }
     return (<GruberTabsView navigator={navigator} />);
   }

@@ -8,4 +8,6 @@ module.exports = {
   ...require('./navigationActions'),
   ...require('./jobTypesFilterActions'),
   ...require('./orderActions'),
+  ...require('./mapActions'),
+  ...require('./userActions'),
 };

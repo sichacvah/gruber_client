@@ -12,6 +12,8 @@ export type Action =
   | { type: 'SELECT_VEHICLE_TYPE', vehicleType: Object, included: Array<Object> }
   | { type: 'SET_DATE', date: Date }
   | { type: 'SET_DURATION', duration: number }
+  | { type: 'SET_COMMENT', comment: string }
+  | { type: 'SET_CENTER', lat: number, lng: number, latDelta: number, lngDelta: number }
 
 
 export type Dispatch = (action: Action | ThunkAction) => any;

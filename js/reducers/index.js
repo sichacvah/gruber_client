@@ -9,6 +9,8 @@ import gruberConfig from './config';
 import navigation from './navigation';
 import jobTypesFilter from './jobTypesFilter';
 import order from './order';
+import map from './map';
+import user from './user';
 
 
 const reducers = combineReducers({
@@ -19,6 +21,8 @@ const reducers = combineReducers({
   navigation,
   jobTypesFilter,
   order,
+  map,
+  user
 });
 
 export default reducers;

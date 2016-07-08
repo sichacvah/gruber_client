@@ -4,36 +4,16 @@
 
 import type { Action } from '../actions/types';
 
-// TODO: Refactor types
-type Attribute = {
-  name: string;
-};
-
-export type State = {
-  attributes: {
-    "vehicle-properties": Array<Object>;
-    address: string;
-    lat: string;
-    lng: string;
-    date?: Date;
-    duration: number;
-  };
-  relationships: {
-    "vehicle-type": {
-      data: ?VehicleType;
-    };
-  };
-  type: string;
-};
-
+// TODO: add flow types
 const initialState = {
   attributes: {
     "vehicle-properties": [],
     address: "",
-    lat: "",
-    lng: "",
-    duration: 1,
-    date: new Date(Date.now()),
+    lat: "54.736965",
+    lng: "55.970451000000025",
+    aproximate_hours: 1,
+    time: new Date(Date.now()),
+    comment: "",
   },
   relationships: {
     "vehicle-type": {
@@ -76,7 +56,7 @@ function vehicleProperties(state: {}, action: Action) {
 }
 
 
-function order(state: State = initialState, action: Action) {
+function order(state = initialState, action: Action) {
   if (action.type === 'SELECT_VEHICLE_TYPE') {
     const availableProperties = action.vehicleType.relationships["vehicle-property-types"].data.map((i) => i.id);
     return {
@@ -107,7 +87,7 @@ function order(state: State = initialState, action: Action) {
       ...state,
       attributes: {
         ...state.attributes,
-        date: action.date
+        time: action.date,
       },
     };
   } else if (action.type === 'SET_DURATION') {
@@ -115,11 +95,43 @@ function order(state: State = initialState, action: Action) {
       ...state,
       attributes: {
         ...state.attributes,
-        duration: action.duration,
-      }
-    }
+        aproximate_hours: action.duration,
+      },
+    };
+  } else if (action.type === 'SET_COMMENT') {
+    return { 
+      ...state,
+      attributes: {
+        ...state.attributes,
+        comment: action.comment,
+      },
+    };
+  } else if (action.type === 'SET_ADDRESS') {
+    return {
+      ...state,
+      attributes: {
+        ...state.attributes,
+        address: parseAddress(action.address),
+      },
+    };
+  } else if (action.type === 'SET_CENTER') {
+    return {
+      ...state,
+      attributes: {
+        ...state.attributes,
+        lat: action.lat.toString(),
+        lng: action.lng.toString(),
+      },
+    };
   }
   return state;
+}
+
+function parseAddress(address) {
+  const arr = address.split(',');
+  const head = arr.slice(0,2);
+  const tail = arr.slice(2);
+  return `${head.join(",").trim()}\n${tail.join(",").trim()}`
 }
 
 export default order;

@@ -26,16 +26,35 @@ export function changePropertyValue(id: string, value: string): Action {
   };
 }
 
-export function setDate(date: Date) {
+export function setDate(date: Date): Action {
   return {
     type: 'SET_DATE',
     date
   };
 }
 
-export function setDuration(duration: number) {
+export function setDuration(duration: number): Action {
   return {
     type: 'SET_DURATION',
     duration
   } 
 }
+
+
+export function setComment(comment: string): Action {
+  return {
+    type: 'SET_COMMENT',
+    comment
+  };
+}
+
+
+export function setAddress(address: string): Action {
+  return {
+    type: 'SET_ADDRESS',
+    address
+  };
+}
+
+
+

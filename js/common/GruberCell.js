@@ -22,14 +22,14 @@ export default class GruberCell extends React.Component {
     let selectedJobType = (this.props.selectedJobType ? this.props.selectedJobType : 'Выберите тип работ');
     let { label } = this.props;
     if (label && label.length > 0) {
-      label = <Text style={styles.label}>{label}</Text>;
+      label = <Text style={[styles.label, this.props.labelStyles]}>{label}</Text>;
     }
     let cell = (
-        <View style={styles.cell}>
+        <View style={[styles.cell, this.props.style]}>
           <View>
             <View style={{justifyContent: 'center'}}>
               {label}
-              <Text style={styles.text}>{this.props.text}</Text>
+              <Text style={[styles.text, this.props.textStyles]}>{this.props.text}</Text>
             </View>
           </View>
         </View>
@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
     height: 60,
     borderWidth: 0.5,
     borderColor: '#999999',
-    borderRadius: 2,
     backgroundColor: 'white',
     marginBottom: 2,
     alignItems: 'center',

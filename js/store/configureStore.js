@@ -37,7 +37,7 @@ var dropApiLoadingStatuses = createTransform(
         ...state,
         attributes: {
           ...state.attributes,
-          date: new Date(state.attributes.date),
+          time: new Date(state.attributes.time),
         },
       }
       

@@ -37,7 +37,7 @@ const HEIGHT = 60;
 
 const styles = StyleSheet.create({
   container: {
-    height: 70,
+    height: 60,
     elevation: 1,
     marginBottom: 1.8,
     paddingHorizontal: 17,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     right: 0,
-    padding: 17
+    padding: 17,
   },
   label: {
     position: 'absolute',

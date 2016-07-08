@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 
 function setup(): ReactClass<{}> {
+  console.disableYellowBox = true;
   class Root extends React.Component {
     state: {
       isLoading: boolean;

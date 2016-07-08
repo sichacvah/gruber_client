@@ -47,7 +47,6 @@ class PureListView extends React.Component {
 
   constructor(props: Props) {
     super(props);
-    console.log(props);
     let dataSource = new ListView.DataSource({
       getRowData: (dataBlob, sid, rid) => dataBlob[sid][rid],
       getSectionHeaderData: (dataBlob, sid) => dataBlob[sid],
